@@ -1,6 +1,6 @@
 package com.example.checkercommitgithub.controller;
 
-import com.example.checkercommitgithub.service.GithubCommitClient;
+import com.example.checkercommitgithub.service.GithubDashboardService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,15 +9,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GithubCheckerController {
 
-    private final GithubCommitClient githubCommitClient;
+    private final GithubDashboardService githubDashboardService;
 
-    public GithubCheckerController(GithubCommitClient githubCommitClient) {
-        this.githubCommitClient = githubCommitClient;
+    public GithubCheckerController(GithubDashboardService githubDashboardService) {
+        this.githubDashboardService = githubDashboardService;
     }
+
 
     @GetMapping("/checker")
     public void checker() {
-        githubCommitClient.getCommitList();
+        githubDashboardService.checkGithubCommit();
     }
 
     //    @GetMapping("/checker")
