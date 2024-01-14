@@ -97,7 +97,7 @@ public class GithubCommitClient {
                 "#  ✅ 커밋 체크 대시보드\n", "");
         StringBuilder content = new StringBuilder();
         content.append("# github-commit-checker").append("\n").append("#  ✅ 커밋 체크 대시보드").append("\n\n");
-        content.append("---").append("\n").append("# ").append(LocalDate.now()).append("\n").append("| 커밋 여부 | 이름 |").append("\n");
+        content.append("---").append("\n").append("# ").append(LocalDate.now()).append("\n\n").append("| 커밋 여부 | 이름 |").append("\n").append("|-----|-----|").append("\n");
         updates.forEach(commitUpdate -> {
             String username = commitUpdate.getUsername();
             content.append("| ").append(commitUpdate.isUpdate() ? "✅" : " ").append(" | ").append(username).append(" |\n");
