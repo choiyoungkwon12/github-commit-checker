@@ -85,7 +85,6 @@ public class GithubCommitClient {
         url = url.replace("{owner}", GithubDashBoardRepo.ALGORITHM_DASHBOARD.getUsername());
         url = url.replace("{repo}", GithubDashBoardRepo.ALGORITHM_DASHBOARD.getRepository());
         url = url.replace("{path}", "README.md");
-        System.out.println(url);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, entity, String.class);
         if (response.getStatusCode().is2xxSuccessful()) {
             System.out.println("OK!!!");
@@ -114,8 +113,6 @@ public class GithubCommitClient {
         });
 
         Readme readme = response.getBody();
-        System.out.println(readme.getSha());
-        System.out.println(readme.getOwner());
         // 디코딩된 데이터를 String으로 변환 (필요한 경우)
         return readme;
     }
