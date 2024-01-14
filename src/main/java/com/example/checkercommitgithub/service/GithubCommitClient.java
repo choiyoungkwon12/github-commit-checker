@@ -6,9 +6,12 @@ import com.example.checkercommitgithub.constant.repo.GithubDashBoardRepo;
 import com.example.checkercommitgithub.service.dto.CommitUpdate;
 import com.example.checkercommitgithub.service.dto.GithubCommitsResponse;
 import com.example.checkercommitgithub.service.dto.Readme;
+import com.example.checkercommitgithub.service.dto.ReadmeUpdate;
 import com.example.checkercommitgithub.util.TimeUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -17,10 +20,15 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Component
 public class GithubCommitClient {
+
+    @Value("${github.api.key}")
+    private String apiKey;
+
     private final RestTemplate restTemplate;
 
     public GithubCommitClient(RestTemplate restTemplate) {
@@ -37,20 +45,7 @@ public class GithubCommitClient {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 List<GithubCommitsResponse> infos = response.getBody();
-                boolean checked = false;
-
-                System.out.println(infos.size());
-                for (int j = 0; j < infos.size(); j++) {
-                    GithubCommitsResponse commit = infos.get(i);
-                    System.out.println("name " + commit.getCommit().getCommitter().getName());
-                    System.out.println("Date " + commit.getCommit().getCommitter().getDate());
-                    System.out.println("message " + commit.getCommit().getMessage());
-
-                    if (TimeUtil.isTimeWithinRange(start, end, commit.getCommit().getCommitter().getDate())) {
-                        checked = true;
-                        break;
-                    }
-                }
+                boolean checked = isUpdated(start, end, infos, i);
 
                 updates.add(new CommitUpdate(value.getUsername(), checked));
             } else {
@@ -60,11 +55,41 @@ public class GithubCommitClient {
         return updates;
     }
 
-    public void updateReadme(List<CommitUpdate> updates) {
-        String currentReadmeFile = getReadmeFile();
-        String content = makeNewContent(updates, currentReadmeFile);
+    private boolean isUpdated(LocalDateTime start, LocalDateTime end, List<GithubCommitsResponse> infos, int i) {
+        boolean checked = false;
+        for (int j = 0; j < infos.size(); j++) {
+            GithubCommitsResponse commit = infos.get(i);
+            if (TimeUtil.isTimeWithinRange(start, end, commit.getCommit().getCommitter().getDate())) {
+                checked = true;
+                break;
+            }
+        }
+        return checked;
+    }
 
-        System.out.println(content);
+    public void updateReadme(List<CommitUpdate> updates) {
+        Readme currentReadmeFile = getReadmeFile();
+        String newContent = makeNewContent(updates, currentReadmeFile.getConvertedContent());
+        System.out.println(newContent);
+        updateReadmeFile(currentReadmeFile, newContent);
+    }
+
+    private void updateReadmeFile(Readme readme, String newContent) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + apiKey);
+        headers.set("X-GitHub-Api-Version", "2022-11-28");
+        ReadmeUpdate dashboardReadme = new ReadmeUpdate("update dashboard", Base64.getEncoder().encodeToString(newContent.getBytes()), readme.getSha());
+        HttpEntity<ReadmeUpdate> entity = new HttpEntity<>(dashboardReadme, headers);
+
+        String url = GithubAPI.DOMAIN.getUrl() + GithubAPI.GET_README.getUrl();
+        url = url.replace("{owner}", GithubDashBoardRepo.ALGORITHM_DASHBOARD.getUsername());
+        url = url.replace("{repo}", GithubDashBoardRepo.ALGORITHM_DASHBOARD.getRepository());
+        url = url.replace("{path}", "README.md");
+        System.out.println(url);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, entity, String.class);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            System.out.println("OK!!!");
+        }
     }
 
     private String makeNewContent(List<CommitUpdate> updates, String currentReadmeFile) {
@@ -82,17 +107,17 @@ public class GithubCommitClient {
         return content.toString();
     }
 
-    private String getReadmeFile() {
+    private Readme getReadmeFile() {
         // Base64로 디코딩
         String url = readReadMeURL();
         ResponseEntity<Readme> response = restTemplate.exchange(url, HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<>() {
         });
 
-        Readme body = response.getBody();
+        Readme readme = response.getBody();
+        System.out.println(readme.getSha());
+        System.out.println(readme.getOwner());
         // 디코딩된 데이터를 String으로 변환 (필요한 경우)
-        String readmeFileContent = new String(body.getContent());
-        System.out.println(readmeFileContent);
-        return readmeFileContent;
+        return readme;
     }
 
     private String makeCommitRequestURL(GithubAlgorithmRepo repo) {
