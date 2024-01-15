@@ -45,7 +45,7 @@ public class GithubCommitClient {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 List<GithubCommitsResponse> infos = response.getBody();
-                boolean checked = isUpdated(start, end, infos, i);
+                boolean checked = isUpdated(start, end, infos);
 
                 updates.add(new CommitUpdate(value.getUsername(), checked));
             } else {
@@ -55,10 +55,10 @@ public class GithubCommitClient {
         return updates;
     }
 
-    private boolean isUpdated(LocalDateTime start, LocalDateTime end, List<GithubCommitsResponse> infos, int i) {
+    private boolean isUpdated(LocalDateTime start, LocalDateTime end, List<GithubCommitsResponse> infos) {
         boolean checked = false;
         for (int j = 0; j < infos.size(); j++) {
-            GithubCommitsResponse commit = infos.get(i);
+            GithubCommitsResponse commit = infos.get(j);
             if (TimeUtil.isTimeWithinRange(start, end, commit.getCommit().getCommitter().getDate())) {
                 checked = true;
                 break;
