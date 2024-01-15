@@ -59,7 +59,7 @@ public class GithubCommitClient {
         boolean checked = false;
         for (int j = 0; j < infos.size(); j++) {
             GithubCommitsResponse commit = infos.get(j);
-            if (TimeUtil.isTimeWithinRange(start, end, commit.getCommit().getCommitter().getDate())) {
+            if (TimeUtil.isTimeWithinRange(start, end, commit.getCommit().getCommitter().getDate().plusHours(9))) {
                 checked = true;
                 break;
             }
