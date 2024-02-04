@@ -2,17 +2,6 @@
 #  ✅ 커밋 체크 대시보드
 
 ---
-# 2024-02-03
-
-| 커밋 여부 | 이름 |
-|-----|-----|
-| ✅ | choiyoungkwon12 |
-|   | KimHaKyeon95 |
-| ✅ | Valium-K |
-|   | zlarbals |
----
-
----
 # 2024-02-04
 
 | 커밋 여부 | 이름 |
@@ -21,6 +10,17 @@
 |   | KimHaKyeon95 |
 |   | Valium-K |
 | ✅ | zlarbals |
+---
+
+---
+# 2024-02-03
+
+| 커밋 여부 | 이름 |
+|-----|-----|
+| ✅ | choiyoungkwon12 |
+|   | KimHaKyeon95 |
+| ✅ | Valium-K |
+|   | zlarbals |
 ---
 
 ---
