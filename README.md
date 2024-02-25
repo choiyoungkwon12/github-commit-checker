@@ -1,15 +1,6 @@
 # github-commit-checker
 #  ✅ 커밋 체크 대시보드
 
----
-# 2024-02-25
-
-| 커밋 여부 | 이름 |
-|-----|-----|
-|   | choiyoungkwon12 |
-|   | KimHaKyeon95 |
-|   | zlarbals |
----
 
 ---
 # 2024-02-26
@@ -20,7 +11,15 @@
 | ✅ | KimHaKyeon95 |
 | ✅ | zlarbals |
 ---
+---
+# 2024-02-25
 
+| 커밋 여부 | 이름 |
+|-----|-----|
+|   | choiyoungkwon12 |
+|   | KimHaKyeon95 |
+|   | zlarbals |
+---
 ---
 # 2024-02-24
 
