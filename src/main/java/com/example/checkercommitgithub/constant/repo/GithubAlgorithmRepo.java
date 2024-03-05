@@ -2,7 +2,7 @@ package com.example.checkercommitgithub.constant.repo;
 
 public enum GithubAlgorithmRepo {
     NED("choiyoungkwon12", "Algorithm-Practice"),
-    JACK("KimHaKyeon95", "code_test"),
+    JACK("KimHaKyeon95", "codetree-TILs"),
     DEVIN("zlarbals", "Algorithm_Practice"),
     ;
     private final String username;
