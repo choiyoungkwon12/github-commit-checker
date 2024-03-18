@@ -6,7 +6,7 @@
 
 | 커밋 여부 | 이름 |
 |-----|-----|
-|   | choiyoungkwon12 |
+| ✅ | choiyoungkwon12 |
 | ✅ | KimHaKyeon95 |
 | ✅ | zlarbals |
 ---
